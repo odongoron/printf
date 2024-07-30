@@ -48,7 +48,7 @@ int print_octal(va_list args)
     return (_puts(&buffer[i]));
 }
 
-int print_hex(va_list args)
+int print_hex(va_list args, char specifier)
 {
     unsigned int n = va_arg(args, unsigned int);
     char buffer[9];
@@ -57,22 +57,8 @@ int print_hex(va_list args)
     buffer[i] = '\0';
     while (n > 0)
     {
-        buffer[--i] = "0123456789abcdef"[n % 16];
-        n /= 16;
-    }
-    return (_puts(&buffer[i]));
-}
-
-int print_HEX(va_list args)
-{
-    unsigned int n = va_arg(args, unsigned int);
-    char buffer[9];
-    int i = 8;
-
-    buffer[i] = '\0';
-    while (n > 0)
-    {
-        buffer[--i] = "0123456789ABCDEF"[n % 16];
+        buffer[--i] = (specifier == 'x') ? "0123456789abcdef"[n % 16]
+                                        : "0123456789ABCDEF"[n % 16];
         n /= 16;
     }
     return (_puts(&buffer[i]));
