@@ -42,4 +42,3 @@ int print_hex_digit(int digit)
 {
     return (_putchar("0123456789ABCDEF"[digit]));
 }
-

@@ -22,8 +22,12 @@ int print_percent(va_list args)
 int print_int(va_list args)
 {
     int n = va_arg(args, int);
+    int count = 0;
+
+    if (n < 0)
+        count++;
     print_number(n);
-    return (n < 0 ? 1 : 0);
+    return (count);
 }
 
 int print_unsigned(va_list args)
@@ -40,6 +44,8 @@ int print_octal(va_list args)
     int i = 10;
 
     buffer[i] = '\0';
+    if (n == 0)
+        return (_putchar('0'));
     while (n > 0)
     {
         buffer[--i] = (n % 8) + '0';
@@ -48,17 +54,35 @@ int print_octal(va_list args)
     return (_puts(&buffer[i]));
 }
 
-int print_hex(va_list args, char specifier)
+int print_hex(va_list args)
 {
     unsigned int n = va_arg(args, unsigned int);
     char buffer[9];
     int i = 8;
 
     buffer[i] = '\0';
+    if (n == 0)
+        return (_putchar('0'));
     while (n > 0)
     {
-        buffer[--i] = (specifier == 'x') ? "0123456789abcdef"[n % 16]
-                                        : "0123456789ABCDEF"[n % 16];
+        buffer[--i] = "0123456789abcdef"[n % 16];
+        n /= 16;
+    }
+    return (_puts(&buffer[i]));
+}
+
+int print_HEX(va_list args)
+{
+    unsigned int n = va_arg(args, unsigned int);
+    char buffer[9];
+    int i = 8;
+
+    buffer[i] = '\0';
+    if (n == 0)
+        return (_putchar('0'));
+    while (n > 0)
+    {
+        buffer[--i] = "0123456789ABCDEF"[n % 16];
         n /= 16;
     }
     return (_puts(&buffer[i]));
@@ -72,6 +96,8 @@ int print_pointer(va_list args)
     int i = 16;
 
     buffer[i] = '\0';
+    if (n == 0)
+        return (_puts("(nil)"));
     while (n > 0)
     {
         buffer[--i] = "0123456789abcdef"[n % 16];
@@ -87,6 +113,8 @@ int print_binary(va_list args)
     int i = 32;
 
     buffer[i] = '\0';
+    if (n == 0)
+        return (_putchar('0'));
     while (n > 0)
     {
         buffer[--i] = (n % 2) + '0';
@@ -126,12 +154,15 @@ int print_reversed(va_list args)
 {
     char *str = va_arg(args, char *);
     int len = 0;
+    int i;
 
+    if (str == NULL)
+        str = "(null)";
     while (str[len])
         len++;
-    while (len--)
-        _putchar(str[len]);
-    return (0);
+    for (i = len - 1; i >= 0; i--)
+        _putchar(str[i]);
+    return (len);
 }
 
 int print_rot13(va_list args)
@@ -154,4 +185,3 @@ int print_rot13(va_list args)
     }
     return (i);
 }
-

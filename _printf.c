@@ -1,91 +1,57 @@
 #include "main.h"
-#include <stdio.h>
 
 /**
- * _printf - Produces output according to a format.
- * @format: A format string containing zero or more directives.
+ * _printf - produces output according to a format
+ * @format: format string
  *
- * Return: The number of characters printed (excluding the null byte).
+ * Return: number of characters printed
  */
 int _printf(const char *format, ...)
 {
     int count = 0;
     va_list args;
-    const char *p = format;
+    int (*func)(va_list);
 
-    if (format == NULL)
+    if (!format)
         return (-1);
 
     va_start(args, format);
 
-    while (*p)
+    while (*format)
     {
-        if (*p == '%')
+        if (*format == '%')
         {
-            p++;
-            if (*p == '\0')
-                break;
-
-            if (*p == 'r' || *p == 'n')
+            format++;
+            switch (*format)
             {
-                count += printf("%s", p - 1);
-                p += 2;
-                continue;
-            }
-
-            switch (*p)
-            {
-                case 'c':
-                    count += print_char(args);
-                    break;
-                case 's':
-                    count += print_string(args);
-                    break;
-                case '%':
-                    count += print_percent(args);
-                    break;
+                case 'c': func = print_char; break;
+                case 's': func = print_string; break;
+                case '%': func = print_percent; break;
                 case 'd':
-                case 'i':
-                    count += print_int(args);
-                    break;
-                case 'u':
-                    count += print_unsigned(args);
-                    break;
-                case 'o':
-                    count += print_octal(args);
-                    break;
-                case 'x':
-                case 'X':
-                    count += print_hex(args, *p);
-                    break;
-                case 'p':
-                    count += print_pointer(args);
-                    break;
-                case 'b':
-                    count += print_binary(args);
-                    break;
-                case 'S':
-                    count += print_special_string(args);
-                    break;
-                case 'r':
-                    count += print_reversed(args);
-                    break;
-                case 'R':
-                    count += print_rot13(args);
-                    break;
-                default:
-                    _putchar('%');
-                    _putchar(*p);
-                    count += 2;
+                case 'i': func = print_int; break;
+                case 'u': func = print_unsigned; break;
+                case 'o': func = print_octal; break;
+                case 'x': func = print_hex; break;
+                case 'X': func = print_HEX; break;
+                case 'p': func = print_pointer; break;
+                case 'b': func = print_binary; break;
+                case 'S': func = print_special_string; break;
+                case 'r': func = print_reversed; break;
+                case 'R': func = print_rot13; break;
+                default: 
+                    _putchar('%'); 
+                    _putchar(*format); 
+                    count += 2; 
                     continue;
             }
+            count += func(args);
         }
         else
         {
-            _putchar(*p);
+            _putchar(*format);
             count++;
         }
-        p++;
+        format++;
     }
 
     va_end(args);
