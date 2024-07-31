@@ -11,7 +11,7 @@ int process_format(const char *format, va_list args)
 {
 	int count = 0;
 
-	print_func func;
+	int (*func)(va_list);
 
 	while (*format)
 	{
