@@ -1,47 +1,22 @@
 #include "main.h"
 
 /**
-* print_int - Prints an integer
-* @args: Variadic arguments list
-*
-* Return: Number of characters printed
-*/
-int print_int(va_list args)
+ * print_int - Prints an integer
+ * @args: A va_list containing the integer to be printed
+ * @spec: A format specifier struct containing flags, width, precision, length
+ *
+ * Return: The number of characters printed
+ */
+int print_int(va_list args, format_specifier_t spec)
 {
-	int n = va_arg(args, int);
+	long num;
 
-	int count = 0;
-
-	if (n < 0)
-	{
-		_putchar('-');
-		n = -n;
-		count++;
-	}
-
-	if (n == 0)
-	{
-		_putchar('0');
-		count++;
-	}
+	if (spec.length == 'l')
+		num = va_arg(args, long);
+	else if (spec.length == 'h')
+		num = (short)va_arg(args, int);
 	else
-	{
-		char buffer[10];
+		num = va_arg(args, int);
 
-		int i = 0;
-
-		while (n > 0)
-		{
-			buffer[i++] = (n % 10) + '0';
-			n /= 10;
-		}
-
-		while (i > 0)
-		{
-			_putchar(buffer[--i]);
-			count++;
-		}
-	}
-
-	return (count);
+	return (print_number_with_flags(num, spec));
 }

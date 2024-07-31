@@ -1,40 +1,27 @@
 #include "main.h"
 
 /**
-* print_octal - Prints an octal number
-* @args: Variadic arguments list
-*
-* Return: Number of characters printed
-*/
-int print_octal(va_list args)
+ * print_octal - Prints an unsigned integer in octal format
+ * @args: A va_list containing the unsigned integer to be printed
+ * @spec: A format specifier struct containing flags
+ *
+ * Return: The number of characters printed
+ */
+int print_octal(va_list args, format_specifier_t spec)
 {
-	unsigned int n = va_arg(args, unsigned int);
+	unsigned long num;
 
-	int count = 0;
+	if (spec.length == 'l')
+		num = va_arg(args, unsigned long);
 
-	if (n == 0)
-	{
-		_putchar('0');
-		count++;
-	}
+	else if (spec.length == 'h')
+		num = (unsigned short)va_arg(args, unsigned int);
+
 	else
-	{
-		char buffer[11];
+		num = va_arg(args, unsigned int);
 
-		int i = 0;
+	if (spec.flags & FLAG_HASH && num != 0)
+		return (_putchar('0') + print_number_base(num, 8, 0));
 
-		while (n > 0)
-		{
-			buffer[i++] = (n % 8) + '0';
-			n /= 8;
-		}
-
-		while (i > 0)
-		{
-			_putchar(buffer[--i]);
-			count++;
-		}
-	}
-
-	return (count);
+	return (print_number_base(num, 8, 0));
 }

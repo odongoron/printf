@@ -1,40 +1,16 @@
 #include "main.h"
 
 /**
-* print_binary - Prints a binary number
-* @args: Variadic arguments list
-*
-* Return: Number of characters printed
-*/
-int print_binary(va_list args)
+ * _print_binary - Prints an unsigned integer in binary format
+ * @n: The unsigned integer to print
+ *
+ * Return: The number of characters printed
+ */
+int print_binary(va_list args, format_specifier_t spec)
+
 {
-	unsigned int n = va_arg(args, unsigned int);
+	unsigned int num = va_arg(args, unsigned int);
 
-	int count = 0;
-
-	if (n == 0)
-	{
-		_putchar('0');
-		count++;
-	}
-	else
-	{
-		char buffer[32];
-
-		int i = 0;
-
-		while (n > 0)
-		{
-			buffer[i++] = (n % 2) + '0';
-			n /= 2;
-		}
-
-		while (i > 0)
-		{
-			_putchar(buffer[--i]);
-			count++;
-		}
-	}
-
-	return (count);
+	(void)spec;
+	return print_number_base(num, 2, 0);
 }

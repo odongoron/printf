@@ -2,39 +2,23 @@
 
 /**
 * print_unsigned_int - Prints an unsigned integer
-* @args: Variadic arguments list
+* @args: A va_list containing the unsigned integer to be printed
+* @spec: A format specifier struct containing flags, width, precision, length
 *
-* Return: Number of characters printed
+* Return: The number of characters printed
 */
-int print_unsigned_int(va_list args)
+int print_unsigned_int(va_list args, format_specifier_t spec)
 {
-	unsigned int n = va_arg(args, unsigned int);
+	unsigned long num;
 
-	int count = 0;
+	if (spec.length == 'l')
+		num = va_arg(args, unsigned long);
 
-	if (n == 0)
-	{
-		_putchar('0');
-		count++;
-	}
+	else if (spec.length == 'h')
+		num = (unsigned short)va_arg(args, unsigned int);
+
 	else
-	{
-		char buffer[10];
+		num = va_arg(args, unsigned int);
 
-		int i = 0;
-
-		while (n > 0)
-		{
-			buffer[i++] = (n % 10) + '0';
-			n /= 10;
-		}
-
-		while (i > 0)
-		{
-			_putchar(buffer[--i]);
-			count++;
-		}
-	}
-
-	return (count);
+	return (print_number_with_flags(num, spec));
 }

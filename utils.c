@@ -1,101 +1,124 @@
 #include "main.h"
-#include <unistd.h>
 
-/**
-* _putchar - writes a character to stdout
-* @c: the character to print
-*
-* Return: 1 on success, -1 on error
-*/
 int _putchar(char c)
 {
-	return (write(1, &c, 1));
+	return write(1, &c, 1);
 }
 
-/**
-* print_number - prints an integer
-* @n: the integer to print
-*
-* Return: the number of characters printed
-*/
-int print_number(int n)
+int _puts(char *str)
 {
 	int count = 0;
 
-	int divisor = 1;
-
-	int temp = n;
-
-	if (n < 0)
+	while (*str)
 	{
-		_putchar('-');
-		count++;
-		n = -n;
-	}
-
-	while (temp / 10 > 0)
-	{
-		divisor *= 10;
-		temp /= 10;
-	}
-
-	while (divisor > 0)
-	{
-		_putchar((n / divisor) % 10 + '0');
-		n %= divisor;
-		divisor /= 10;
+		_putchar(*str);
+		str++;
 		count++;
 	}
 
 	return (count);
 }
 
-/**
-* print_unsigned_number - prints an unsigned integer
-* @n: the unsigned integer to print
-*
-* Return: the number of characters printed
-*/
-int print_unsigned_number(unsigned int n)
+int _putchar_multiple(char c, int count)
 {
-	int count = 0;
+	int i;
 
-	unsigned int divisor = 1;
-
-	unsigned int temp = n;
-
-	while (temp / 10 > 0)
-	{
-		divisor *= 10;
-		temp /= 10;
-	}
-
-	while (divisor > 0)
-	{
-		_putchar((n / divisor) % 10 + '0');
-		n %= divisor;
-		divisor /= 10;
-		count++;
-	}
+	for (i = 0; i < count; i++)
+		_putchar(c);
 
 	return (count);
 }
 
-/**
-* print_hex_digit - prints a single hexadecimal digit
-* @digit: the digit to print
-* @uppercase: whether to use uppercase letters
-*
-* Return: the number of characters printed
-*/
-int print_hex_digit(int digit, int uppercase)
+int _putnstr(char *str, int n)
 {
-	char c;
+	int i;
 
-	if (digit >= 0 && digit <= 9)
-		c = digit + '0';
-	else
-		c = (digit - 10) + (uppercase ? 'A' : 'a');
+	for (i = 0; i < n && str[i]; i++)
+		_putchar(str[i]);
 
-	return (_putchar(c));
+	return (i);
+}
+
+int _strlen(char *str)
+{
+	int len = 0;
+
+	while (str[len])
+		len++;
+
+	return (len);
+}
+
+int _numlen(long num, int base)
+{
+	int len = 1;
+
+	while (num /= base)
+		len++;
+
+	return (len);
+}
+
+int print_number_base(unsigned long num, int base, int uppercase)
+{
+	char *digits = uppercase ? "0123456789ABCDEF" : "0123456789abcdef";
+
+	char buffer[65];
+
+	int i = 64;
+
+	buffer[i] = '\0';
+
+	do {
+		buffer[--i] = digits[num % base];
+		num /= base;
+	} while (num);
+
+	return _puts(&buffer[i]);
+}
+
+int print_number_with_flags(long num, format_specifier_t spec)
+{
+	int is_negative = num < 0;
+
+	char padding_char = ' ';
+
+	int len = 0, count = 0;
+
+	if (spec.flags & FLAG_ZERO && !(spec.flags & FLAG_MINUS))
+		padding_char = '0';
+
+	if (spec.precision >= 0)
+		spec.flags &= ~FLAG_ZERO; /* Ignore '0' flag when precision is set */
+
+	if (is_negative)
+		num = -num;
+
+	len = _numlen(num, 10);
+
+	if (spec.precision > len)
+		len = spec.precision;
+
+	if (is_negative || (spec.flags & FLAG_PLUS) || (spec.flags & FLAG_SPACE))
+		len++;
+
+	if (spec.width > len && !(spec.flags & FLAG_MINUS))
+		count += _putchar_multiple(padding_char, spec.width - len);
+
+	if (is_negative)
+		count += _putchar('-');
+	else if (spec.flags & FLAG_PLUS)
+		count += _putchar('+');
+	else if (spec.flags & FLAG_SPACE)
+		count += _putchar(' ');
+
+	if (spec.precision > _numlen(num, 10))
+		count += _putchar_multiple('0', spec.precision - _numlen(num, 10));
+
+	count += print_number_base(num, 10, 0);
+
+	if (spec.width > len && (spec.flags & FLAG_MINUS))
+		count += _putchar_multiple(' ', spec.width - len);
+
+	return (count);
 }
