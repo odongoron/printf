@@ -1,27 +1,32 @@
 #include "main.h"
 
 /**
-* print_reversed - Prints a string in reverse order
-* @args: A va_list containing the string to be printed
-* @spec: A format specifier struct containing flags, width, precision
+* print_reversed - Prints a string in reverse
+* @args: Variadic arguments list
 *
-* Return: The number of characters printed
+* Return: Number of characters printed
 */
-int print_reversed(va_list args, format_specifier_t spec)
+int print_reversed(va_list args)
 {
 	char *str = va_arg(args, char *);
 
-	int len, count = 0;
+	int count = 0;
 
-	(void)spec;  /* Specifier not used */
+	int len = 0;
 
 	if (str == NULL)
+	{
 		str = "(null)";
+	}
 
-	len = _strlen(str);
+	while (str[len])
+		len++;
 
-	while (len--)
-		count += _putchar(str[len]);
+	while (len > 0)
+	{
+		_putchar(str[--len]);
+		count++;
+	}
 
 	return (count);
 }

@@ -1,12 +1,12 @@
 #include "main.h"
 
 /**
-* print_binary - Prints a binary number
+* print_HEX - Prints a hexadecimal number (uppercase)
 * @args: Variadic arguments list
 *
 * Return: Number of characters printed
 */
-int print_binary(va_list args)
+int print_HEX(va_list args)
 {
 	unsigned int n = va_arg(args, unsigned int);
 
@@ -19,14 +19,16 @@ int print_binary(va_list args)
 	}
 	else
 	{
-		char buffer[32];
+		char buffer[9];
 
 		int i = 0;
 
 		while (n > 0)
 		{
-			buffer[i++] = (n % 2) + '0';
-			n /= 2;
+			int digit = n % 16;
+
+			buffer[i++] = (digit < 10) ? (digit + '0') : (digit - 10 + 'A');
+			n /= 16;
 		}
 
 		while (i > 0)

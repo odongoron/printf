@@ -2,31 +2,26 @@
 
 /**
 * print_string - Prints a string
-* @args: A va_list containing the string to be printed
-* @spec: A format specifier struct containing flags, width, precision, length
+* @args: Variadic arguments list
 *
-* Return: The number of characters printed
+* Return: Number of characters printed
 */
-int print_string(va_list args, format_specifier_t spec)
+int print_string(va_list args)
 {
 	char *str = va_arg(args, char *);
 
-	int count = 0, len;
+	int count = 0;
 
 	if (str == NULL)
+	{
 		str = "(null)";
+	}
 
-	len = _strlen(str);
-	if (spec.precision >= 0 && spec.precision < len)
-		len = spec.precision;
-
-	if (spec.width > len && !(spec.flags & FLAG_MINUS))
-		count += _putchar_multiple(' ', spec.width - len);
-
-	count += _putnstr(str, len);
-
-	if (spec.width > len && (spec.flags & FLAG_MINUS))
-		count += _putchar_multiple(' ', spec.width - len);
+	while (*str)
+	{
+		_putchar(*str++);
+		count++;
+	}
 
 	return (count);
 }

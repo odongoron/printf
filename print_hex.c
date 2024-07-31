@@ -1,29 +1,42 @@
 #include "main.h"
 
 /**
-* print_hex - Prints an unsigned integer in hexadecimal format
-* @args: A va_list containing the unsigned integer to be printed
-* @spec: A format specifier struct containing flags
-* @uppercase: Flag to determine whether to print in uppercase or lowercase
+* print_hex - Prints a hexadecimal number (lowercase)
+* @args: Variadic arguments list
 *
-* Return: The number of characters printed
+* Return: Number of characters printed
 */
-int print_hex(va_list args, format_specifier_t spec, int uppercase)
+int print_hex(va_list args)
 {
-	unsigned long num;
+	unsigned int n = va_arg(args, unsigned int);
 
-	if (spec.length == 'l')
-		num = va_arg(args, unsigned long);
+	int count = 0;
 
-	else if (spec.length == 'h')
-		num = (unsigned short)va_arg(args, unsigned int);
-
+	if (n == 0)
+	{
+		_putchar('0');
+		count++;
+	}
 	else
-		num = va_arg(args, unsigned int);
+	{
+		char buffer[9];
 
-	if (spec.flags & FLAG_HASH && num != 0)
-		return (_puts(uppercase ? "0X" : "0x") +
-		print_number_base(num, 16, uppercase));
+		int i = 0;
 
-	return (print_number_base(num, 16, uppercase));
+		while (n > 0)
+		{
+			int digit = n % 16;
+
+			buffer[i++] = (digit < 10) ? (digit + '0') : (digit - 10 + 'a');
+			n /= 16;
+		}
+
+		while (i > 0)
+		{
+			_putchar(buffer[--i]);
+			count++;
+		}
+	}
+
+	return (count);
 }
