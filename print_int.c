@@ -12,20 +12,36 @@ int print_int(va_list args)
 
 	int count = 0;
 
-	if (n == 0)
-	{
-		_putchar('0');
-		return (1);
-	}
-
 	if (n < 0)
 	{
 		_putchar('-');
-		count++;
 		n = -n;
+		count++;
 	}
 
-	count += print_number(n);
+	if (n == 0)
+	{
+		_putchar('0');
+		count++;
+	}
+	else
+	{
+		char buffer[10];
+
+		int i = 0;
+
+		while (n > 0)
+		{
+			buffer[i++] = (n % 10) + '0';
+			n /= 10;
+		}
+
+		while (i > 0)
+		{
+			_putchar(buffer[--i]);
+			count++;
+		}
+	}
 
 	return (count);
 }

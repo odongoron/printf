@@ -21,23 +21,28 @@ int _putchar(char c)
 int print_number(int n)
 {
 	int count = 0;
-	unsigned int num = n;
-	unsigned int divisor = 1;
+
+	int divisor = 1;
+
+	int temp = n;
 
 	if (n < 0)
 	{
-		num = -n;
+		_putchar('-');
+		count++;
+		n = -n;
 	}
 
-	while (num / divisor >= 10)
+	while (temp / 10 > 0)
 	{
 		divisor *= 10;
+		temp /= 10;
 	}
 
 	while (divisor > 0)
 	{
-		_putchar((num / divisor) + '0');
-		num %= divisor;
+		_putchar((n / divisor) % 10 + '0');
+		n %= divisor;
 		divisor /= 10;
 		count++;
 	}
